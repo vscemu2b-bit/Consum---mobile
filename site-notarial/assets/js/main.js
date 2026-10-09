@@ -2,6 +2,17 @@
    Atrium Notaires — interactions de l'interface
    ========================================================================== */
 import { SERVICES, STATS, COMEX, TIMELINE, ACTE_STEPS, ABATTEMENTS, GLOSSARY, FAQ, OFFICE } from './data.js';
+import Lenis from 'lenis';
+
+/* Défilement amorti (désactivé si l'utilisateur préfère un mouvement réduit) */
+let lenis = null;
+if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  try {
+    lenis = new Lenis({ lerp: 0.085, wheelMultiplier: 0.9 });
+    const raf = (t) => { lenis.raf(t); requestAnimationFrame(raf); };
+    requestAnimationFrame(raf);
+  } catch (e) { lenis = null; }
+}
 
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
@@ -134,8 +145,10 @@ function setupModal() {
       </div>
       </div>`;
     if (typeof dlg.showModal === 'function') dlg.showModal(); else dlg.setAttribute('open', '');
+    lenis?.stop();
   };
-  const close = () => (dlg.close ? dlg.close() : dlg.removeAttribute('open'));
+  const close = () => { lenis?.start(); return dlg.close ? dlg.close() : dlg.removeAttribute('open'); };
+  dlg.addEventListener('close', () => lenis?.start());
   document.addEventListener('click', (e) => {
     const card = e.target.closest('.card[data-id]');
     if (card) return open(card.dataset.id);
@@ -156,9 +169,19 @@ function setupNav() {
     links.classList.toggle('is-open', open);
     burger.setAttribute('aria-expanded', open);
     document.body.style.overflow = open ? 'hidden' : '';
+    if (open) lenis?.stop(); else lenis?.start();
   };
   burger.addEventListener('click', () => toggle());
   $$('a', links).forEach((a) => a.addEventListener('click', () => toggle(false)));
+  // Liens d'ancre : défilement amorti
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest('a[href^="#"]');
+    if (!a || a.getAttribute('href').length < 2) return;
+    const el = document.querySelector(a.getAttribute('href'));
+    if (!el) return;
+    e.preventDefault();
+    if (lenis) lenis.scrollTo(el, { duration: 1.6 }); else el.scrollIntoView({ behavior: 'smooth' });
+  });
   const onScroll = () => {
     nav.classList.toggle('is-scrolled', scrollY > 40);
     const max = document.documentElement.scrollHeight - innerHeight;
@@ -214,7 +237,7 @@ function setupTilt() {
     const r = card.getBoundingClientRect();
     const x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
     card.classList.add('is-tilting');
-    card.style.transform = `rotateY(${(x - 0.5) * 14}deg) rotateX(${(0.5 - y) * 12}deg) translateZ(10px)`;
+    card.style.transform = `rotateY(${(x - 0.5) * 8}deg) rotateX(${(0.5 - y) * 6}deg)`;
     card.style.setProperty('--mx', `${x * 100}%`);
     card.style.setProperty('--my', `${y * 100}%`);
   }, { passive: true });
@@ -285,7 +308,7 @@ function setupSimulators() {
   });
 
   // Frais d'acquisition
-  const COLORS = ['#c9a45c', '#6f86c6', '#8fb39a', '#b7a6d9'];
+  const COLORS = ['#1a2f66', '#5c1a2b', '#0f4a3f', '#c8a46b'];
   const calcFrais = () => {
     const prix = Math.max(0, +$('#fPrix').value || 0);
     const mobilier = Math.min(prix, Math.max(0, +$('#fMobilier').value || 0));
@@ -410,8 +433,24 @@ async function setup3D() {
   }
 }
 
+/* Curseur : anneau champagne qui suit le pointeur et s'agrandit sur les éléments cliquables */
+function setupCursor() {
+  const c = $('#cursor');
+  if (!c || matchMedia('(hover: none)').matches) return;
+  let x = innerWidth / 2, y = innerHeight / 2, cx = x, cy = y;
+  addEventListener('pointermove', (e) => {
+    x = e.clientX; y = e.clientY; c.classList.add('is-on');
+    c.classList.toggle('is-hover', !!e.target.closest?.('a, button, .card, summary, select, input, textarea, label'));
+  }, { passive: true });
+  document.addEventListener('pointerleave', () => c.classList.remove('is-on'));
+  const loop = () => { cx += (x - cx) * 0.18; cy += (y - cy) * 0.18; c.style.transform = `translate3d(${cx}px, ${cy}px, 0)`; requestAnimationFrame(loop); };
+  loop();
+}
+
 /* ===================== Démarrage ===================== */
 renderStats();
+$('#marquee').innerHTML = [...SERVICES, ...SERVICES].map((s) => `<span>${s.title}</span>`).join('');
+setupCursor();
 renderServices();
 renderActeSteps();
 renderTimeline();

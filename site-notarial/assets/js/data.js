@@ -13,17 +13,17 @@ export const OFFICE = {
 };
 
 export const STATS = [
-  { color: '#2347e8', value: 120, suffix: '', label: 'collaborateurs', note: 'juristes, clercs, formalistes, comptables' },
-  { color: '#ff6b2c', value: 40, suffix: '', label: 'notaires', note: 'officiers publics et notaires diplômés' },
-  { color: '#12a67a', value: 7, suffix: '', label: 'associés au COMEX', note: 'une gouvernance collégiale' },
-  { color: '#7a3cf0', value: 7, suffix: '', label: 'pôles d\'expertise', note: 'de l\'actif institutionnel à la famille' },
+  { color: '#1a2f66', value: 120, suffix: '', label: 'collaborateurs', note: 'juristes, clercs, formalistes, comptables' },
+  { color: '#5c1a2b', value: 40, suffix: '', label: 'notaires', note: 'officiers publics et notaires diplômés' },
+  { color: '#0f4a3f', value: 7, suffix: '', label: 'associés au COMEX', note: 'une gouvernance collégiale' },
+  { color: '#3a1f4a', value: 7, suffix: '', label: 'pôles d\'expertise', note: 'de l\'actif institutionnel à la famille' },
 ];
 
 /* Les 7 pôles de l'étude --------------------------------------------------- */
 export const SERVICES = [
   {
     id: 'institutionnel',
-    color: '#2347e8',
+    color: '#1a2f66',
     icon: 'tower',
     title: 'Immobilier institutionnel',
     kicker: 'Foncières · Investisseurs · Assureurs · SCPI / OPCI',
@@ -42,7 +42,7 @@ export const SERVICES = [
   },
   {
     id: 'construction-promotion',
-    color: '#ff6b2c',
+    color: '#7a4a1e',
     icon: 'crane',
     title: 'Construction & Promotion',
     kicker: 'Pôle Construction I — Promoteurs · VEFA',
@@ -61,7 +61,7 @@ export const SERVICES = [
   },
   {
     id: 'construction-amenagement',
-    color: '#12a67a',
+    color: '#0f4a3f',
     icon: 'blueprint',
     title: 'Construction & Aménagement',
     kicker: 'Pôle Construction II — Aménageurs · Collectivités',
@@ -80,7 +80,7 @@ export const SERVICES = [
   },
   {
     id: 'actes-courants',
-    color: '#ffc21a', dark: true,
+    color: '#8a6a2a',
     icon: 'key',
     title: 'Actes courants',
     kicker: 'Particuliers · Primo-accédants · Investisseurs',
@@ -99,7 +99,7 @@ export const SERVICES = [
   },
   {
     id: 'financement',
-    color: '#7a3cf0',
+    color: '#3a1f4a',
     icon: 'vault',
     title: 'Financement',
     kicker: 'Banques · Établissements de crédit · Emprunteurs',
@@ -118,7 +118,7 @@ export const SERVICES = [
   },
   {
     id: 'credit-bail',
-    color: '#00a3d9',
+    color: '#0f4f5c',
     icon: 'contract',
     title: 'Crédit-bail immobilier',
     kicker: 'Crédit-bailleurs · Entreprises · Pools',
@@ -137,7 +137,7 @@ export const SERVICES = [
   },
   {
     id: 'famille',
-    color: '#f0457a',
+    color: '#5c1a2b',
     icon: 'family',
     title: 'Droit de la famille & patrimoine',
     kicker: 'Couples · Familles · Chefs d\'entreprise',

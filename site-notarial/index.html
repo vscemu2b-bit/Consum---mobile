@@ -5,18 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Atrium Notaires</title>
   <meta name="description" content="Atrium Notaires — 120 collaborateurs, 40 notaires et 7 pôles d'expertise : immobilier institutionnel, construction, financement, crédit-bail, actes courants et droit de la famille.">
-  <meta name="theme-color" content="#2347e8">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%232347e8'/%3E%3Cpath d='M32 10 54 52H10Z' fill='none' stroke='%23ffc21a' stroke-width='4'/%3E%3Cpath d='M22 40h20' stroke='%23ffc21a' stroke-width='4'/%3E%3C/svg%3E">
+  <meta name="theme-color" content="#0a0e1a">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230a0e1a'/%3E%3Cpath d='M32 10 54 52H10Z' fill='none' stroke='%23c8a46b' stroke-width='4'/%3E%3Cpath d='M22 40h20' stroke='%23c8a46b' stroke-width='4'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400;1,6..96,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/style.css">
   <script type="importmap">
-    { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js" } }
+    { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/", "lenis": "https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.mjs" } }
   </script>
 </head>
 <body>
   <a class="skip" href="#contenu">Aller au contenu</a>
+  <div class="cursor" id="cursor" aria-hidden="true"></div>
 
   <div class="loader" id="loader" aria-hidden="true">
     <div class="loader-mark">
@@ -84,6 +85,10 @@
       </div>
     </section>
 
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee-track" id="marquee"></div>
+    </div>
+
     <!-- ===================== EXPERTISES ===================== -->
     <section class="section services" id="expertises">
       <div class="container">
@@ -117,19 +122,19 @@
           <h2>Trois effets que seul<br><em>un acte notarié produit.</em></h2>
         </div>
         <div class="pillars-grid">
-          <article class="pillar reveal" style="--c:#2347e8">
+          <article class="pillar reveal" style="--c:#1a2f66">
             <span class="pillar-num">I</span>
             <h3>Force probante</h3>
             <p>L'acte authentique fait foi de ce que le notaire a personnellement constaté jusqu'à inscription de faux. Son contenu ne peut être contesté par simple preuve contraire.</p>
             <span class="pillar-ref">Art. 1371 C. civ.</span>
           </article>
-          <article class="pillar reveal" style="--c:#ff6b2c">
+          <article class="pillar reveal" style="--c:#5c1a2b">
             <span class="pillar-num">II</span>
             <h3>Force exécutoire</h3>
             <p>Revêtue de la formule exécutoire, la copie de l'acte permet au créancier de procéder à l'exécution forcée, comme un jugement, sans saisir le juge.</p>
             <span class="pillar-ref">Art. L. 111-3 CPCE</span>
           </article>
-          <article class="pillar reveal" style="--c:#12a67a">
+          <article class="pillar reveal" style="--c:#0f4a3f">
             <span class="pillar-num">III</span>
             <h3>Date certaine & conservation</h3>
             <p>L'acte a une date incontestable. Sa minute est conservée par l'étude, puis versée aux archives ; les actes électroniques rejoignent le Minutier central électronique.</p>
@@ -263,12 +268,12 @@
           <h2>Une sécurité<br><em>garantie par la loi.</em></h2>
         </div>
         <div class="engage-grid">
-          <article class="engage reveal" style="--c:#2347e8"><h3>Officier public</h3><p>Nommés par arrêté du garde des Sceaux, nos notaires exercent une mission de service public sous le contrôle du procureur de la République et des instances professionnelles.</p></article>
-          <article class="engage reveal" style="--c:#12a67a"><h3>Fonds sécurisés</h3><p>Les fonds confiés sont déposés à la Caisse des Dépôts. Notre comptabilité fait l'objet d'une inspection annuelle.</p></article>
-          <article class="engage reveal" style="--c:#ffc21a"><h3>Garantie collective</h3><p>Au-delà de l'assurance de responsabilité civile professionnelle, la garantie collective du notariat protège nos clients.</p></article>
-          <article class="engage reveal" style="--c:#f0457a"><h3>Secret professionnel</h3><p>Le notaire est tenu au secret professionnel ; nos systèmes d'information respectent le RGPD et les standards de l'ADSN.</p></article>
-          <article class="engage reveal" style="--c:#7a3cf0"><h3>Vigilance LCB-FT</h3><p>Nous appliquons les obligations de lutte contre le blanchiment de capitaux et le financement du terrorisme.</p></article>
-          <article class="engage reveal" style="--c:#00a3d9"><h3>Étude digitale</h3><p>Acte authentique électronique, signature à distance, espace client sécurisé et suivi des dossiers en temps réel.</p></article>
+          <article class="engage reveal" style="--c:#1a2f66"><h3>Officier public</h3><p>Nommés par arrêté du garde des Sceaux, nos notaires exercent une mission de service public sous le contrôle du procureur de la République et des instances professionnelles.</p></article>
+          <article class="engage reveal" style="--c:#0f4a3f"><h3>Fonds sécurisés</h3><p>Les fonds confiés sont déposés à la Caisse des Dépôts. Notre comptabilité fait l'objet d'une inspection annuelle.</p></article>
+          <article class="engage reveal" style="--c:#7a4a1e"><h3>Garantie collective</h3><p>Au-delà de l'assurance de responsabilité civile professionnelle, la garantie collective du notariat protège nos clients.</p></article>
+          <article class="engage reveal" style="--c:#5c1a2b"><h3>Secret professionnel</h3><p>Le notaire est tenu au secret professionnel ; nos systèmes d'information respectent le RGPD et les standards de l'ADSN.</p></article>
+          <article class="engage reveal" style="--c:#3a1f4a"><h3>Vigilance LCB-FT</h3><p>Nous appliquons les obligations de lutte contre le blanchiment de capitaux et le financement du terrorisme.</p></article>
+          <article class="engage reveal" style="--c:#0f4f5c"><h3>Étude digitale</h3><p>Acte authentique électronique, signature à distance, espace client sécurisé et suivi des dossiers en temps réel.</p></article>
         </div>
       </div>
     </section>

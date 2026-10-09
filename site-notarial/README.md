@@ -45,6 +45,7 @@ Il s'agit d'estimations indicatives, à faire valider et actualiser par l'étude
 
 ## Technique
 
-- Three.js 0.160 via CDN (import map), polices Google Fonts.
+- Three.js 0.160 via CDN (import map) : rendu physique (verre, laiton, cuir, noyer), tone mapping filmique, ombres douces, reflets d'environnement et halo lumineux (bloom).
+- Défilement amorti (Lenis 1.1.13), curseur personnalisé, polices Bodoni Moda et Jost (Google Fonts).
 - Les scènes 3D ne s'animent que lorsqu'elles sont visibles. Elles respectent `prefers-reduced-motion` et basculent vers une version statique si WebGL est indisponible.
 - Le site est responsive (mobile, tablette, desktop) et accessible : navigation clavier, onglets ARIA, boîte de dialogue native, contrastes élevés.
