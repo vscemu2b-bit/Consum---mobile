@@ -1,36 +1,39 @@
 /* ==========================================================================
    Scène 3D d'accueil : un ensemble immobilier se construit au défilement.
-   Plan (lignes dorées) → structure → façades vitrées éclairées.
+   Plan (lignes de couleur) → structure → façades vitrées colorées.
    ========================================================================== */
 import * as THREE from 'three';
 import { clamp, easeOutCubic, sectionProgress, makeRenderer, watchVisibility, reducedMotion } from './utils3d.js';
 
-const GOLD = 0xc9a45c;
-const INK = 0x0a0f1c;
+const SKY = 0xeef2ff;
+const BLUE = 0x2347e8;
+const ORANGE = 0xff6b2c;
+const YELLOW = 0xffc21a;
+const PALETTE = ['#2347e8', '#ff6b2c', '#12a67a', '#ffc21a', '#7a3cf0', '#00a3d9', '#f0457a'];
 
 /* Texture de façade : meneaux + fenêtres allumées aléatoirement */
-function facadeTexture(seed) {
+function facadeTexture(seed, color) {
   const c = document.createElement('canvas');
   c.width = 256; c.height = 64;
   const g = c.getContext('2d');
   const sky = g.createLinearGradient(0, 0, 0, 64);
-  sky.addColorStop(0, '#2a3b63'); sky.addColorStop(1, '#141d33');
+  sky.addColorStop(0, color); sky.addColorStop(1, color);
   g.fillStyle = sky; g.fillRect(0, 0, 256, 64);
   let s = seed;
   const rnd = () => ((s = (s * 9301 + 49297) % 233280) / 233280);
   for (let x = 0; x < 8; x++) {
     const lit = rnd();
     if (lit > 0.55) {
-      g.fillStyle = `rgba(255,${190 + rnd() * 50 | 0},130,${0.35 + rnd() * 0.45})`;
+      g.fillStyle = `rgba(255,255,255,${0.18 + rnd() * 0.3})`;
       g.fillRect(x * 32 + 2, 6, 28, 52);
     }
     // reflet diagonal sur le vitrage
-    g.fillStyle = 'rgba(255,255,255,0.05)';
+    g.fillStyle = 'rgba(255,255,255,0.16)';
     g.beginPath(); g.moveTo(x * 32 + 4, 58); g.lineTo(x * 32 + 18, 6); g.lineTo(x * 32 + 24, 6); g.lineTo(x * 32 + 10, 58); g.fill();
   }
-  g.fillStyle = 'rgba(201,164,92,0.75)';
+  g.fillStyle = 'rgba(255,255,255,0.85)';
   for (let x = 0; x <= 8; x++) g.fillRect(x * 32 - 1, 0, 2, 64);
-  g.fillStyle = 'rgba(201,164,92,0.6)';
+  g.fillStyle = 'rgba(255,255,255,0.9)';
   g.fillRect(0, 0, 256, 3); g.fillRect(0, 61, 256, 3);
   const t = new THREE.CanvasTexture(c);
   t.colorSpace = THREE.SRGBColorSpace;
@@ -70,7 +73,7 @@ function documentTexture(title) {
 }
 
 /* Treillis métallique (mât, flèche de grue) */
-function lattice(w, h, d, segs, color = GOLD, opacity = 0.9) {
+function lattice(w, h, d, segs, color = ORANGE, opacity = 1) {
   const pts = [];
   const hw = w / 2, hd = d / 2;
   const corners = [[-hw, -hd], [hw, -hd], [hw, hd], [-hw, hd]];
@@ -94,19 +97,20 @@ function lattice(w, h, d, segs, color = GOLD, opacity = 0.9) {
 
 export function initHeroScene(canvas, section, { onProgress } = {}) {
   const renderer = makeRenderer(canvas);
+  renderer.toneMapping = THREE.NoToneMapping;
   const scene = new THREE.Scene();
-  scene.fog = new THREE.Fog(INK, 26, 70);
+  scene.fog = new THREE.Fog(SKY, 32, 80);
 
   const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 200);
   const world = new THREE.Group();
   scene.add(world);
 
   /* Lumières */
-  scene.add(new THREE.HemisphereLight(0x8fa4d8, 0x0a0f1c, 0.7));
-  const sun = new THREE.DirectionalLight(0xffe2b0, 1.6);
+  scene.add(new THREE.HemisphereLight(0xffffff, 0xc9d4ff, 1.35));
+  const sun = new THREE.DirectionalLight(0xffffff, 1.5);
   sun.position.set(12, 22, 10);
   scene.add(sun);
-  const rim = new THREE.PointLight(GOLD, 30, 40, 1.6);
+  const rim = new THREE.PointLight(ORANGE, 25, 40, 1.6);
   rim.position.set(-8, 6, -6);
   scene.add(rim);
 
@@ -115,34 +119,35 @@ export function initHeroScene(canvas, section, { onProgress } = {}) {
     const c = document.createElement('canvas'); c.width = c.height = 512;
     const g = c.getContext('2d');
     const r = g.createRadialGradient(256, 256, 0, 256, 256, 256);
-    r.addColorStop(0, '#1a2440'); r.addColorStop(.6, '#0f1628'); r.addColorStop(1, 'rgba(10,15,28,0)');
+    r.addColorStop(0, '#ffffff'); r.addColorStop(.6, '#e3e9ff'); r.addColorStop(1, 'rgba(238,242,255,0)');
     g.fillStyle = r; g.fillRect(0, 0, 512, 512);
     const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
   })();
   const ground = new THREE.Mesh(new THREE.CircleGeometry(22, 64), new THREE.MeshBasicMaterial({ map: groundTex, transparent: true }));
   ground.rotation.x = -Math.PI / 2;
   world.add(ground);
-  const grid = new THREE.GridHelper(36, 36, GOLD, GOLD);
-  grid.material.transparent = true; grid.material.opacity = 0.09;
+  const grid = new THREE.GridHelper(36, 36, BLUE, BLUE);
+  grid.material.transparent = true; grid.material.opacity = 0.12;
   world.add(grid);
-  const ring = new THREE.Mesh(new THREE.RingGeometry(13.9, 14, 128), new THREE.MeshBasicMaterial({ color: GOLD, transparent: true, opacity: 0.35, side: THREE.DoubleSide }));
+  const ring = new THREE.Mesh(new THREE.RingGeometry(13.9, 14, 128), new THREE.MeshBasicMaterial({ color: ORANGE, transparent: true, opacity: 0.6, side: THREE.DoubleSide }));
   ring.rotation.x = -Math.PI / 2; ring.position.y = 0.01;
   world.add(ring);
 
   /* Bâtiments ---------------------------------------------------------------- */
   const FLOOR_H = 0.9;
   const towersDef = [
-    { x: 0, z: 0, w: 4.2, d: 3.4, floors: 15, start: 0.0, span: 0.85, seed: 7 },
-    { x: -5.6, z: 1.8, w: 3.2, d: 3.0, floors: 9, start: 0.12, span: 0.6, seed: 13 },
-    { x: 5.0, z: -2.6, w: 3.6, d: 2.6, floors: 6, start: 0.25, span: 0.5, seed: 29 },
-    { x: 3.4, z: 4.2, w: 5.0, d: 2.0, floors: 3, start: 0.4, span: 0.45, seed: 41 },
+    { x: 0, z: 0, w: 4.2, d: 3.4, floors: 15, start: 0.0, span: 0.85, seed: 7, color: '#2347e8' },
+    { x: -5.6, z: 1.8, w: 3.2, d: 3.0, floors: 9, start: 0.12, span: 0.6, seed: 13, color: '#ff6b2c' },
+    { x: 5.0, z: -2.6, w: 3.6, d: 2.6, floors: 6, start: 0.25, span: 0.5, seed: 29, color: '#12a67a' },
+    { x: 3.4, z: 4.2, w: 5.0, d: 2.0, floors: 3, start: 0.4, span: 0.45, seed: 41, color: '#f0457a' },
   ];
-  const slabMat = new THREE.MeshStandardMaterial({ color: 0x2b3554, roughness: 0.8, metalness: 0.1 });
+  const slabMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.7, metalness: 0.0 });
   const towers = towersDef.map((def) => {
     const group = new THREE.Group();
     group.position.set(def.x, 0, def.z);
     world.add(group);
-    const tex = facadeTexture(def.seed);
+    const tex = facadeTexture(def.seed, def.color);
+    const towerColor = new THREE.Color(def.color);
     tex.repeat.set(Math.max(1, def.w / 2), 1);
     const floors = [];
     for (let k = 0; k < def.floors; k++) {
@@ -150,12 +155,12 @@ export function initHeroScene(canvas, section, { onProgress } = {}) {
       const slab = new THREE.Mesh(new THREE.BoxGeometry(def.w + 0.2, 0.12, def.d + 0.2), slabMat);
       const glassGeo = new THREE.BoxGeometry(def.w, FLOOR_H - 0.12, def.d);
       const glassMat = new THREE.MeshStandardMaterial({
-        map: tex, emissive: 0xffc77a, emissiveMap: tex, emissiveIntensity: 0.0,
-        roughness: 0.25, metalness: 0.6, transparent: true, opacity: 0,
+        map: tex, emissive: 0xffffff, emissiveMap: tex, emissiveIntensity: 0.0,
+        roughness: 0.35, metalness: 0.1, transparent: true, opacity: 0,
       });
       const glass = new THREE.Mesh(glassGeo, glassMat);
       glass.position.y = (FLOOR_H) / 2;
-      const edges = new THREE.LineSegments(new THREE.EdgesGeometry(glassGeo), new THREE.LineBasicMaterial({ color: GOLD, transparent: true, opacity: 0 }));
+      const edges = new THREE.LineSegments(new THREE.EdgesGeometry(glassGeo), new THREE.LineBasicMaterial({ color: towerColor, transparent: true, opacity: 0 }));
       edges.position.copy(glass.position);
       f.add(slab, glass, edges);
       f.userData = { slab, glass, edges, baseY: k * FLOOR_H };
@@ -164,12 +169,12 @@ export function initHeroScene(canvas, section, { onProgress } = {}) {
       floors.push(f);
     }
     // Couronnement doré
-    const crown = new THREE.Mesh(new THREE.BoxGeometry(def.w + 0.3, 0.14, def.d + 0.3), new THREE.MeshStandardMaterial({ color: GOLD, metalness: 0.9, roughness: 0.3, emissive: GOLD, emissiveIntensity: 0.2 }));
+    const crown = new THREE.Mesh(new THREE.BoxGeometry(def.w + 0.3, 0.14, def.d + 0.3), new THREE.MeshStandardMaterial({ color: YELLOW, metalness: 0.2, roughness: 0.4, emissive: YELLOW, emissiveIntensity: 0.25 }));
     crown.position.y = def.floors * FLOOR_H + 0.07;
     crown.scale.setScalar(0.001);
     group.add(crown);
     // Empreinte au sol (plan)
-    const plan = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.PlaneGeometry(def.w + 0.8, def.d + 0.8)), new THREE.LineDashedMaterial({ color: GOLD, dashSize: 0.25, gapSize: 0.15, transparent: true, opacity: 0.7 }));
+    const plan = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.PlaneGeometry(def.w + 0.8, def.d + 0.8)), new THREE.LineDashedMaterial({ color: towerColor, dashSize: 0.25, gapSize: 0.15, transparent: true, opacity: 0.7 }));
     plan.rotation.x = -Math.PI / 2; plan.position.y = 0.02; plan.computeLineDistances();
     group.add(plan);
     return { def, group, floors, crown };
@@ -186,16 +191,16 @@ export function initHeroScene(canvas, section, { onProgress } = {}) {
   crane.add(head);
   const jib = lattice(0.4, 11, 0.4, 22); jib.rotation.z = -Math.PI / 2; jib.position.set(0, 0, 0);
   const counterJib = lattice(0.4, 3.4, 0.4, 7); counterJib.rotation.z = Math.PI / 2;
-  const cwt = new THREE.Mesh(new THREE.BoxGeometry(1, 0.7, 0.6), new THREE.MeshStandardMaterial({ color: 0x39425e, roughness: .7 }));
+  const cwt = new THREE.Mesh(new THREE.BoxGeometry(1, 0.7, 0.6), new THREE.MeshStandardMaterial({ color: 0x101935, roughness: .7 }));
   cwt.position.set(-3.0, -0.2, 0);
-  const cab = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.5, 0.6), new THREE.MeshStandardMaterial({ color: GOLD, metalness: .6, roughness: .4, emissive: GOLD, emissiveIntensity: .15 }));
+  const cab = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.5, 0.6), new THREE.MeshStandardMaterial({ color: YELLOW, roughness: .4, emissive: YELLOW, emissiveIntensity: .2 }));
   cab.position.set(0.3, -0.35, 0.45);
   const apex = lattice(0.3, 1.8, 0.3, 3); apex.position.y = 0;
   head.add(jib, counterJib, cwt, cab, apex);
   // Câble + charge
   const cableGeo = new THREE.BufferGeometry().setAttribute('position', new THREE.Float32BufferAttribute([0, 0, 0, 0, -1, 0], 3));
-  const cable = new THREE.Line(cableGeo, new THREE.LineBasicMaterial({ color: 0xe6cf9b, transparent: true, opacity: .8 }));
-  const load = new THREE.Mesh(new THREE.BoxGeometry(2.4, 0.12, 0.5), new THREE.MeshStandardMaterial({ color: GOLD, metalness: .8, roughness: .35 }));
+  const cable = new THREE.Line(cableGeo, new THREE.LineBasicMaterial({ color: 0x101935, transparent: true, opacity: .7 }));
+  const load = new THREE.Mesh(new THREE.BoxGeometry(2.4, 0.12, 0.5), new THREE.MeshStandardMaterial({ color: 0x7a3cf0, roughness: .5 }));
   head.add(cable, load);
 
   /* Documents en orbite -------------------------------------------------------- */
@@ -211,13 +216,16 @@ export function initHeroScene(canvas, section, { onProgress } = {}) {
   /* Poussière d'or ------------------------------------------------------------- */
   const N = 700;
   const pos = new Float32Array(N * 3);
+  const col = new Float32Array(N * 3);
+  const tmpC = new THREE.Color();
   for (let i = 0; i < N; i++) {
+    tmpC.set(PALETTE[i % PALETTE.length]).toArray(col, i * 3);
     const r = 4 + Math.random() * 18, a = Math.random() * Math.PI * 2;
     pos[i * 3] = Math.cos(a) * r; pos[i * 3 + 1] = Math.random() * 20; pos[i * 3 + 2] = Math.sin(a) * r;
   }
   const dust = new THREE.Points(
-    new THREE.BufferGeometry().setAttribute('position', new THREE.BufferAttribute(pos, 3)),
-    new THREE.PointsMaterial({ color: 0xe6cf9b, size: 0.06, transparent: true, opacity: 0.7, blending: THREE.AdditiveBlending, depthWrite: false })
+    new THREE.BufferGeometry().setAttribute('position', new THREE.BufferAttribute(pos, 3)).setAttribute('color', new THREE.BufferAttribute(col, 3)),
+    new THREE.PointsMaterial({ vertexColors: true, size: 0.11, transparent: true, opacity: 0.85, depthWrite: false })
   );
   world.add(dust);
 
@@ -272,8 +280,8 @@ export function initHeroScene(canvas, section, { onProgress } = {}) {
         f.position.y = baseY + (1 - e) * 2.2;
         slab.scale.set(0.6 + 0.4 * e, 1, 0.6 + 0.4 * e);
         edges.material.opacity = clamp(local * 2) * (1 - clamp((local - 0.8) * 3) * 0.55);
-        glass.material.opacity = clamp((local - 0.35) * 1.6) * 0.92;
-        glass.material.emissiveIntensity = clamp((local - 0.7) * 3.3) * (0.55 + 0.15 * Math.sin(t * 0.8 + k + ti));
+        glass.material.opacity = clamp((local - 0.35) * 1.6);
+        glass.material.emissiveIntensity = clamp((local - 0.7) * 3.3) * (0.22 + 0.06 * Math.sin(t * 0.8 + k + ti));
         if (ti === 0 && local > 0) topMain = baseY + FLOOR_H * e;
       });
       const c = clamp((fp - def.floors) / 1.2);

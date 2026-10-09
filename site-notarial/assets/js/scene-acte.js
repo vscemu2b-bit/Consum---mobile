@@ -6,6 +6,8 @@ import * as THREE from 'three';
 import { clamp, easeOutCubic, easeInOut, sectionProgress, makeRenderer, watchVisibility, reducedMotion } from './utils3d.js';
 
 const GOLD = 0xc9a45c;
+const YELLOW = 0xffc21a;
+const PALETTE = ['#ff6b2c', '#12a67a', '#ffc21a', '#7a3cf0', '#00a3d9', '#f0457a', '#ffffff'];
 const W = 3, D = 4.2, TOP = 0.22;          // dimensions d'une page (unités monde)
 const CW = 600, CH = 840;                   // résolution du canevas de la page
 const SERIF = '"Cormorant Garamond", Georgia, serif';
@@ -81,7 +83,7 @@ export function initActeScene(canvas, section, { onProgress } = {}) {
   const key = new THREE.DirectionalLight(0xfff0d6, 2.0);
   key.position.set(4, 10, 6);
   scene.add(key);
-  const warm = new THREE.PointLight(GOLD, 18, 20, 1.5);
+  const warm = new THREE.PointLight(0xff6b2c, 22, 20, 1.5);
   warm.position.set(-4, 3, 2);
   scene.add(warm);
 
@@ -91,10 +93,10 @@ export function initActeScene(canvas, section, { onProgress } = {}) {
   world.add(book);
 
   /* Bureau : plateau sombre à filet doré */
-  const desk = new THREE.Mesh(new THREE.CircleGeometry(7.5, 64), new THREE.MeshStandardMaterial({ color: 0x121a2e, roughness: .6, metalness: .2 }));
+  const desk = new THREE.Mesh(new THREE.CircleGeometry(7.5, 64), new THREE.MeshStandardMaterial({ color: 0x1b37c4, roughness: .55, metalness: .1 }));
   desk.rotation.x = -Math.PI / 2;
   world.add(desk);
-  const deskRing = new THREE.Mesh(new THREE.RingGeometry(7.45, 7.5, 128), new THREE.MeshBasicMaterial({ color: GOLD, transparent: true, opacity: .5 }));
+  const deskRing = new THREE.Mesh(new THREE.RingGeometry(7.4, 7.5, 128), new THREE.MeshBasicMaterial({ color: YELLOW, transparent: true, opacity: .9 }));
   deskRing.rotation.x = -Math.PI / 2; deskRing.position.y = .005;
   world.add(deskRing);
 
@@ -254,7 +256,7 @@ export function initActeScene(canvas, section, { onProgress } = {}) {
   // Position du sceau sur la page (pixels du canevas → monde)
   const toWorld = (px, py) => new THREE.Vector3(0.02 + (px / CW) * W, TOP, -D / 2 + (py / CH) * D);
   const sealSpot = toWorld(470, 760);
-  const shock = new THREE.Mesh(new THREE.RingGeometry(0.5, 0.56, 64), new THREE.MeshBasicMaterial({ color: GOLD, transparent: true, opacity: 0, side: THREE.DoubleSide }));
+  const shock = new THREE.Mesh(new THREE.RingGeometry(0.5, 0.56, 64), new THREE.MeshBasicMaterial({ color: YELLOW, transparent: true, opacity: 0, side: THREE.DoubleSide }));
   shock.rotation.x = -Math.PI / 2;
   shock.position.set(sealSpot.x, TOP + 0.01, sealSpot.z);
   book.add(shock);
@@ -264,20 +266,21 @@ export function initActeScene(canvas, section, { onProgress } = {}) {
   archive.position.set(0, 0, -6.5);
   world.add(archive);
   const COLS = 9, ROWS = 5;
-  const boxes = new THREE.InstancedMesh(new THREE.BoxGeometry(0.9, 0.62, 0.7), new THREE.MeshStandardMaterial({ color: 0x34437a, roughness: .55, metalness: .25 }), COLS * ROWS);
+  const boxes = new THREE.InstancedMesh(new THREE.BoxGeometry(0.9, 0.62, 0.7), new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: .6 }), COLS * ROWS);
+  { const c = new THREE.Color(); for (let i = 0; i < COLS * ROWS; i++) boxes.setColorAt(i, c.set(PALETTE[(i * 5) % PALETTE.length])); }
   archive.add(boxes);
-  const shelfLines = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(COLS * 1.0, ROWS * 0.75, 0.8)), new THREE.LineBasicMaterial({ color: GOLD, transparent: true, opacity: 0 }));
+  const shelfLines = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(COLS * 1.0, ROWS * 0.75, 0.8)), new THREE.LineBasicMaterial({ color: YELLOW, transparent: true, opacity: 0 }));
   shelfLines.position.y = ROWS * 0.75 / 2;
   archive.add(shelfLines);
   const slot = new THREE.Vector3(0, 2 * 0.75 + 0.375, 0); // emplacement libre pour la minute
   const dummy = new THREE.Object3D();
-  const cloud = new THREE.Mesh(new THREE.IcosahedronGeometry(0.9, 1), new THREE.MeshBasicMaterial({ color: GOLD, wireframe: true, transparent: true, opacity: 0 }));
+  const cloud = new THREE.Mesh(new THREE.IcosahedronGeometry(0.9, 1), new THREE.MeshBasicMaterial({ color: YELLOW, wireframe: true, transparent: true, opacity: 0 }));
   cloud.position.set(0, ROWS * 0.75 + 2.2, 0);
   archive.add(cloud);
   const STREAM = 160;
   const sPos = new Float32Array(STREAM * 3);
   const sSeed = new Float32Array(STREAM).map(() => Math.random());
-  const stream = new THREE.Points(new THREE.BufferGeometry().setAttribute('position', new THREE.BufferAttribute(sPos, 3)), new THREE.PointsMaterial({ color: 0xe6cf9b, size: 0.07, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false }));
+  const stream = new THREE.Points(new THREE.BufferGeometry().setAttribute('position', new THREE.BufferAttribute(sPos, 3)), new THREE.PointsMaterial({ color: 0xffffff, size: 0.08, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false }));
   archive.add(stream);
 
   /* Responsive -------------------------------------------------------------- */
@@ -334,7 +337,7 @@ export function initActeScene(canvas, section, { onProgress } = {}) {
     // Pièces annexes
     annexes.forEach((m, i) => {
       const k = easeOutCubic(clamp((s2 - 0.1 - i * 0.14) / 0.4));
-      m.visible = k > 0;
+      m.visible = k > 0 && s5 < 0.3;
       if (!m.visible) return;
       const { from, to, rot } = m.userData;
       m.position.lerpVectors(from, to, k);
@@ -386,7 +389,7 @@ export function initActeScene(canvas, section, { onProgress } = {}) {
       boxes.setMatrixAt(n++, dummy.matrix);
     }
     boxes.instanceMatrix.needsUpdate = true;
-    shelfLines.material.opacity = shelfK * 0.6;
+    shelfLines.material.opacity = shelfK * 0.9;
     const cloudK = clamp((s5 - 0.6) / 0.3);
     cloud.material.opacity = cloudK * 0.75;
     cloud.rotation.set(t * 0.2, t * 0.3, 0);

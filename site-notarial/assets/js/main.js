@@ -23,7 +23,7 @@ const icon = (k) => `<svg viewBox="0 0 24 24" aria-hidden="true">${ICONS[k] || '
 /* ===================== Rendu du contenu ===================== */
 function renderStats() {
   $('#statsGrid').innerHTML = STATS.map((s) => `
-    <div class="stat reveal">
+    <div class="stat reveal" style="--c:${s.color}">
       <span class="stat-value" data-count="${s.value}">0</span>
       <span class="stat-label">${s.label}</span>
       <span class="stat-note">${s.note}</span>
@@ -32,7 +32,7 @@ function renderStats() {
 
 function renderServices() {
   $('#servicesGrid').innerHTML = SERVICES.map((s, i) => `
-    <button class="card reveal" data-id="${s.id}" aria-haspopup="dialog">
+    <button class="card reveal${s.dark ? ' dark-text' : ''}" style="--c:${s.color}" data-id="${s.id}" aria-haspopup="dialog">
       <span class="card-num">${String(i + 1).padStart(2, '0')}</span>
       <span class="card-icon">${icon(s.icon)}</span>
       <span class="card-kicker">${s.kicker}</span>
@@ -51,9 +51,10 @@ function renderActeSteps() {
 }
 
 function renderTimeline() {
-  $('#timeline').insertAdjacentHTML('beforeend', TIMELINE.map((s) => `
-    <article class="tl-item">
-      <div><span class="tl-step">${s.step}</span><br><span class="tl-delay">${s.delay}</span></div>
+  const colors = SERVICES.map((x) => x);
+  $('#timeline').insertAdjacentHTML('beforeend', TIMELINE.map((s, i) => `
+    <article class="tl-item" style="--c:${colors[i % colors.length].color}">
+      <div><span class="tl-step${colors[i % colors.length].dark ? ' dark-text' : ''}">${s.step}</span><span class="tl-delay">${s.delay}</span></div>
       <div><h3>${s.title}</h3><p>${s.text}</p></div>
     </article>`).join(''));
 }
@@ -61,17 +62,19 @@ function renderTimeline() {
 function renderComex() {
   $('#comexGrid').innerHTML = COMEX.map((m) => {
     const initials = m.name.replace(/^Me\s+/, '').split(' ').map((w) => w[0]).join('');
+    const svc = SERVICES.find((x) => x.title === m.pole) || SERVICES[0];
+    const dk = svc.dark ? ' dark-text' : '';
     return `
-    <article class="member reveal">
+    <article class="member reveal" style="--c:${svc.color}">
       <div class="member-inner">
         <div class="member-face member-front" data-initials="${initials}">
-          <div class="member-avatar" aria-hidden="true">${initials}</div>
+          <div class="member-avatar${dk}" aria-hidden="true">${initials}</div>
           <h3>${m.name}</h3>
           <p class="member-role">${m.role}</p>
           <p class="member-pole">${m.pole}</p>
           <button class="member-flip" type="button">En savoir plus</button>
         </div>
-        <div class="member-face member-back">
+        <div class="member-face member-back${dk}">
           <p class="member-pole">${m.pole}</p>
           <p>${m.bio}</p>
           <a class="member-flip" href="#contact">Prendre rendez-vous</a>
@@ -114,16 +117,21 @@ function setupModal() {
   const open = (id) => {
     const s = SERVICES.find((x) => x.id === id);
     if (!s) return;
+    dlg.style.setProperty('--c', s.color);
     $('#modalBody').innerHTML = `
-      <span class="card-icon">${icon(s.icon)}</span>
-      <p class="eyebrow" style="margin-top:22px">${s.kicker}</p>
-      <h3 id="modalTitle">${s.title}</h3>
-      <p>${s.summary}</p>
+      <div class="modal-hero${s.dark ? ' dark-text' : ''}">
+        <span class="card-icon">${icon(s.icon)}</span>
+        <p class="eyebrow">${s.kicker}</p>
+        <h3 id="modalTitle">${s.title}</h3>
+        <p>${s.summary}</p>
+      </div>
+      <div class="modal-body">
       <ul class="modal-list">${s.missions.map((m) => `<li>${m}</li>`).join('')}</ul>
       <div class="refs">${s.refs.map((r) => `<span>${r}</span>`).join('')}</div>
       <div class="modal-foot">
         <span class="muted">Une équipe dédiée, sous la direction d'un notaire associé.</span>
         <a class="btn btn-gold" href="#contact" data-pole="${s.id}">Consulter ce pôle</a>
+      </div>
       </div>`;
     if (typeof dlg.showModal === 'function') dlg.showModal(); else dlg.setAttribute('open', '');
   };
@@ -357,10 +365,9 @@ function setupContact() {
     const d = new FormData(form);
     const pole = SERVICES.find((s) => s.id === d.get('pole'))?.title || '';
     const body = `Nom : ${d.get('nom')}\nE-mail : ${d.get('email')}\nTéléphone : ${d.get('tel') || '—'}\nPôle : ${pole}\n\n${d.get('message')}`;
-    location.href = `mailto:${OFFICE.email}?subject=${encodeURIComponent('Demande de rendez-vous — ' + pole)}&body=${encodeURIComponent(body)}`;
+    const href = `mailto:${OFFICE.email}?subject=${encodeURIComponent('Demande de rendez-vous — ' + pole)}&body=${encodeURIComponent(body)}`;
     status.className = 'form-status ok';
-    status.textContent = 'Merci. Votre messagerie s\'ouvre pour finaliser l\'envoi de votre demande.';
-    form.reset();
+    status.innerHTML = `Votre demande est prête. <a href="${esc(href)}">Ouvrir ma messagerie</a> ou écrivez-nous à ${esc(OFFICE.email)}.`;
   });
   $('#espaceClient').addEventListener('click', (e) => {
     e.preventDefault();
