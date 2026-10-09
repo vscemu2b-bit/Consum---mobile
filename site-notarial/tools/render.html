@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Rendu des visuels</title>
+<style>html,body{margin:0;background:#000;overflow:hidden}canvas{display:block;width:100vw;height:100vh}#s{position:absolute;inset:0}</style>
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }
+</script>
+</head>
+<body>
+<div id="s"><canvas id="c"></canvas></div>
+<script type="module">
+  // Page technique : rend une vue fixe d'une scène 3D (voir tools/render-stills.mjs)
+  const q = new URLSearchParams(location.search);
+  const arr = (k) => q.get(k).split(',').map(Number);
+  const still = { p: +q.get('p'), cam: arr('cam'), look: arr('look'), fov: +q.get('fov') };
+  const mod = q.get('scene') === 'acte' ? await import('../src/assets/js/scene-acte.js') : await import('../src/assets/js/scene-hero.js');
+  const init = mod.initActeScene || mod.initHeroScene;
+  await document.fonts.ready;
+  init(document.getElementById('c'), document.getElementById('s'), { still });
+  window.__frames = 0;
+  const tick = () => { window.__frames++; requestAnimationFrame(tick); };
+  requestAnimationFrame(tick);
+</script>
+</body>
+</html>

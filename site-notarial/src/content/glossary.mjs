@@ -1,0 +1,23 @@
+/* Lexique notarial (page /lexique/) */
+export const GLOSSARY = [
+  ['Acte authentique', 'Acte reçu par un officier public compétent, avec les solennités requises. Il fait foi jusqu\'à inscription de faux et emporte force exécutoire.'],
+  ['Minute', 'Original de l\'acte authentique, conservé par le notaire. Les parties reçoivent des copies authentiques.'],
+  ['Copie exécutoire', 'Copie de l\'acte revêtue de la formule exécutoire, permettant au créancier de recourir à l\'exécution forcée sans jugement préalable.'],
+  ['VEFA', 'Vente en l\'état futur d\'achèvement : l\'acquéreur devient propriétaire du sol et des constructions au fur et à mesure de leur exécution.'],
+  ['GFA', 'Garantie financière d\'achèvement, obligatoire en VEFA, garantissant l\'achèvement de l\'immeuble en cas de défaillance du promoteur.'],
+  ['BEFA', 'Bail en l\'état futur d\'achèvement : bail signé sur un immeuble à construire, fréquemment adossé à une VEFA.'],
+  ['DIA', 'Déclaration d\'intention d\'aliéner, adressée à la commune titulaire du droit de préemption, qui dispose de deux mois pour se prononcer.'],
+  ['Publicité foncière', 'Formalité de publication des actes au service de la publicité foncière, rendant les droits opposables aux tiers.'],
+  ['Hypothèque légale spéciale', 'Sûreté du prêteur de deniers qui a remplacé l\'ancien privilège depuis le 1er janvier 2022.'],
+  ['Crédit-bail immobilier', 'Location d\'un immeuble à usage professionnel assortie d\'une promesse unilatérale de vente au profit du crédit-preneur.'],
+  ['Levée d\'option', 'Exercice par le crédit-preneur de la promesse de vente, entraînant le transfert de propriété de l\'immeuble.'],
+  ['Bail réel solidaire', 'Bail de longue durée consenti par un organisme de foncier solidaire, dissociant le foncier du bâti pour l\'accession abordable.'],
+  ['Donation-partage', 'Donation par laquelle un ascendant répartit ses biens entre ses héritiers présomptifs ; les valeurs sont figées au jour de l\'acte.'],
+  ['Acte de notoriété', 'Acte établi par le notaire désignant les héritiers d\'un défunt et leurs droits dans la succession.'],
+  ['Démembrement', 'Division de la propriété entre l\'usufruit (usage et revenus) et la nue-propriété ; valorisée selon le barème de l\'art. 669 CGI.'],
+  ['Mandat de protection future', 'Acte permettant d\'organiser à l\'avance sa propre protection ou celle d\'un enfant, sans passer par une mesure judiciaire.'],
+  ['Division en volumes', 'Technique de division d\'un ensemble immobilier en fractions superposées dans l\'espace, alternative à la copropriété.'],
+  ['État daté', 'Document établi par le syndic lors d\'une vente en copropriété, retraçant les sommes dues par le vendeur et l\'acquéreur.'],
+  ['AAE / AAED', 'Acte authentique électronique, et acte authentique électronique avec comparution à distance d\'une ou plusieurs parties.'],
+  ['FCDDV', 'Fichier central des dispositions de dernières volontés, où sont inscrits les testaments et donations entre époux.'],
+];

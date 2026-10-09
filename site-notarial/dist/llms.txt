@@ -1,0 +1,25 @@
+# Atrium Notaires
+
+> Office notarial à Paris 1er (12, avenue de l'Opéra). 120 collaborateurs, 40 notaires, 7 pôles d'expertise.
+
+## Expertises
+- [Immobilier institutionnel](https://www.atrium-notaires.fr/expertises/immobilier-institutionnel/) : Acquisitions, cessions et arbitrages d'actifs pour les investisseurs, en asset deal comme en share deal.
+- [Construction et promotion](https://www.atrium-notaires.fr/expertises/construction-promotion-vefa/) : Programmes immobiliers en VEFA, du contrat de réservation à la livraison du dernier lot.
+- [Aménagement et urbanisme](https://www.atrium-notaires.fr/expertises/amenagement-urbanisme/) : Maîtrise foncière, montages complexes et dissociation du foncier et du bâti.
+- [Vente immobilière](https://www.atrium-notaires.fr/expertises/vente-immobiliere/) : Achat et vente de logements, avant-contrats et actes du quotidien.
+- [Financement et sûretés](https://www.atrium-notaires.fr/expertises/financement-suretes/) : Actes de prêt et sûretés réelles dotés de la force exécutoire.
+- [Crédit-bail immobilier](https://www.atrium-notaires.fr/expertises/credit-bail-immobilier/) : Montage, cession et dénouement des contrats de crédit-bail.
+- [Famille, patrimoine et succession](https://www.atrium-notaires.fr/expertises/famille-patrimoine-succession/) : Organiser, protéger et transmettre, à chaque étape de la vie.
+
+## Guides
+- [Frais de notaire en 2026 : ce que vous payez vraiment](https://www.atrium-notaires.fr/actualites/frais-de-notaire-2026/) : Environ 7 à 8 % du prix dans l'ancien, 2 à 3 % dans le neuf : derrière les « frais de notaire » se cachent surtout des impôts. Voici leur détail.
+- [Acheter sur plan : les étapes d'une VEFA](https://www.atrium-notaires.fr/actualites/vefa-etapes-achat-sur-plan/) : Réservation, notification du projet d'acte, appels de fonds, livraison : le parcours d'un achat sur plan est très encadré. Le voici étape par étape.
+- [Donation : abattements et barème en 2026](https://www.atrium-notaires.fr/actualites/donation-abattements-2026/) : Abattements renouvelables tous les quinze ans, dons de sommes d'argent, nue-propriété : les outils pour transmettre de son vivant en 2026.
+- [Succession : les délais à connaître](https://www.atrium-notaires.fr/actualites/succession-delais/) : Six mois pour la déclaration, quatre mois avant toute sommation d'opter : le calendrier d'une succession, étape par étape.
+- [Crédit-bail immobilier : bien préparer la levée d'option](https://www.atrium-notaires.fr/actualites/credit-bail-immobilier-levee-option/) : Financer ses locaux sans les acheter, puis en devenir propriétaire : le crédit-bail immobilier et le moment clé de la levée d'option.
+- [Signer chez le notaire à distance : l'acte authentique électronique](https://www.atrium-notaires.fr/actualites/acte-authentique-electronique-signature-a-distance/) : Signer une vente ou une donation sans se déplacer, avec la même valeur qu'un acte papier : voici comment fonctionne l'acte authentique à distance.
+
+## Contact
+- Téléphone : +33 1 00 00 00 00
+- E-mail : contact@atrium-notaires.fr
+- Horaires : Du lundi au vendredi, de 9 h à 19 h
